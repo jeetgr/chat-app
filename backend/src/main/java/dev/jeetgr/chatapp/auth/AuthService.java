@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import dev.jeetgr.chatapp.auth.dto.RegisterRequest;
 import dev.jeetgr.chatapp.auth.dto.RegisterResponse;
+import dev.jeetgr.chatapp.common.exception.EmailAlreadyExistsException;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 
@@ -20,6 +21,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public RegisterResponse register(RegisterRequest request) {
+
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new EmailAlreadyExistsException(request.email());
+        }
 
         User user = User.builder()
                 .email(request.email())

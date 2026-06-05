@@ -22,7 +22,7 @@
   ],
 
   "java.configuration.updateBuildConfiguration": "interactive",
-  "java.compile.nullAnalysis.mode": "automatic",
+  "java.compile.nullAnalysis.mode": "disabled",
 
   "[sql]": {
     "editor.defaultFormatter": "adpyke.vscode-sql-formatter"

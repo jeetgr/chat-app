@@ -97,6 +97,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(RoomAccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleRoomAccessDenied(RoomAccessDeniedException ex) {
+
+        log.warn("Room access denied: {}", ex.getMessage());
+
+        ErrorResponse response = new ErrorResponse(OffsetDateTime.now(), HttpStatus.FORBIDDEN.value(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
 

@@ -49,4 +49,11 @@ public class RoomController {
 
         roomService.joinRoom(roomId, currentUser);
     }
+
+    @PostMapping("/{roomId}/leave")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void leaveRoom(@PathVariable Long roomId, @AuthenticationPrincipal User currentUser) {
+
+        roomService.leaveRoom(roomId, currentUser);
+    }
 }

@@ -4,11 +4,13 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 import dev.jeetgr.chatapp.common.exception.AlreadyRoomMemberException;
 import dev.jeetgr.chatapp.common.exception.RoomAlreadyExistsException;
+import dev.jeetgr.chatapp.common.exception.RoomMembershipNotFoundException;
 import dev.jeetgr.chatapp.common.exception.RoomNotFoundException;
 import dev.jeetgr.chatapp.room.dto.CreateRoomRequest;
 import dev.jeetgr.chatapp.room.dto.RoomResponse;
@@ -70,5 +72,17 @@ public class RoomService {
                 .build();
 
         roomMemberRepository.save(roomMember);
+    }
+
+    @Transactional
+    public void leaveRoom(Long roomId, User currentUser) {
+
+        boolean membershipExists = roomMemberRepository.existsByRoomIdAndUserId(roomId, currentUser.getId());
+
+        if (!membershipExists) {
+            throw new RoomMembershipNotFoundException();
+        }
+
+        roomMemberRepository.deleteByRoomIdAndUserId(roomId, currentUser.getId());
     }
 }

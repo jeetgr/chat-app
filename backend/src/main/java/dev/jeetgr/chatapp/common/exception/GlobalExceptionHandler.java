@@ -87,6 +87,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(RoomMembershipNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRoomMembershipNotFound(RoomMembershipNotFoundException ex) {
+
+        log.warn("Room membership missing: {}", ex.getMessage());
+
+        ErrorResponse response = new ErrorResponse(OffsetDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
 

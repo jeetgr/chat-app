@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: chatapp
+
+  profiles:
+    active: dev

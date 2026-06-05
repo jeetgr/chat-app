@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "ChatAppApplication",
+      "request": "launch",
+
+      "cwd": "${workspaceFolder}",
+
+      "mainClass": "dev.jeetgr.chatapp.ChatappApplication",
+      "projectName": "chatapp",
+
+      "args": "",
+
+      "vmArgs": "-Duser.timezone=UTC",
+
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

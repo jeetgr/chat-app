@@ -1,0 +1,36 @@
+{
+  "editor.tabSize": 4,
+  "explorer.compactFolders": true,
+  "[java]": {
+    "editor.defaultFormatter": "dokimos-dev.palantir-java-formatter",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+
+  "java.completion.importOrder": [
+    "#", // Static imports (Mockito, Assertions) stay cleanly at the top
+    "java", // Core Java features
+    "javax", // Classic enterprise specs
+    "jakarta", // Essential for Spring Boot 3+ web/data annotations
+    "org.springframework", // Isolates your framework imports together
+    "lombok", // Keeps code-gen annotations organized
+    "org", // Generic open-source third-party libraries
+    "com", // Commercial third-party libraries
+    "" // Your local project packages fall to the bottom
+  ],
+
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.compile.nullAnalysis.mode": "automatic",
+
+  "[sql]": {
+    "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+  },
+  "sql-formatter.uppercase": true,
+  "sql-formatter.linesBetweenQueries": 2,
+
+  "java.test.config": {
+    "vmArgs": ["-Duser.timezone=UTC"]
+  }
+}

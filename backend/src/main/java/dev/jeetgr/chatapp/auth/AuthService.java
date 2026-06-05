@@ -13,6 +13,7 @@ import dev.jeetgr.chatapp.auth.dto.RegisterRequest;
 import dev.jeetgr.chatapp.auth.dto.RegisterResponse;
 import dev.jeetgr.chatapp.common.exception.EmailAlreadyExistsException;
 import dev.jeetgr.chatapp.common.exception.InvalidCredentialsException;
+import dev.jeetgr.chatapp.security.JwtService;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 
@@ -22,6 +23,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public RegisterResponse register(RegisterRequest request) {
 
@@ -50,6 +52,8 @@ public class AuthService {
             throw new InvalidCredentialsException();
         }
 
-        return new LoginResponse("Login successful");
+        String token = jwtService.generateToken(user.getEmail());
+
+        return new LoginResponse(token);
     }
 }

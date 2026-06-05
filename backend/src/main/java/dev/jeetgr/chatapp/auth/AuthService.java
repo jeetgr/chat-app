@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
 import dev.jeetgr.chatapp.auth.dto.RegisterRequest;
+import dev.jeetgr.chatapp.auth.dto.RegisterResponse;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 
@@ -18,7 +19,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
 
         User user = User.builder()
                 .email(request.email())
@@ -26,6 +27,8 @@ public class AuthService {
                 .createdAt(OffsetDateTime.now())
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new RegisterResponse(savedUser.getId(), savedUser.getEmail());
     }
 }

@@ -1,0 +1,45 @@
+# IntelliJ
+
+.idea/
+*.iml
+
+# VSCode
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Gradle
+
+.gradle/
+build/
+
+# Maven
+
+target/
+
+# Java
+
+*.class
+out/
+
+# Logs
+
+logs/
+*.log
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Environment
+
+.env
+
+# Docker
+
+postgres-data/
+redis-data/

@@ -1,6 +1,7 @@
 package dev.jeetgr.chatapp.room;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,20 @@ public class RoomService {
         ChatRoom savedRoom = chatRoomRepository.save(room);
 
         return new RoomResponse(
-                savedRoom.getId(), savedRoom.getName(), savedRoom.getCreatedBy().getEmail(), savedRoom.getCreatedAt());
+                savedRoom.getId(), //
+                savedRoom.getName(),
+                savedRoom.getCreatedBy().getEmail(),
+                savedRoom.getCreatedAt());
+    }
+
+    public List<RoomResponse> getRooms() {
+
+        return chatRoomRepository.findAll().stream()
+                .map(room -> new RoomResponse(
+                        room.getId(), //
+                        room.getName(),
+                        room.getCreatedBy().getEmail(),
+                        room.getCreatedAt()))
+                .toList();
     }
 }

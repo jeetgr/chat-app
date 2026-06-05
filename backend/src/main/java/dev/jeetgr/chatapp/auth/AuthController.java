@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import dev.jeetgr.chatapp.auth.dto.LoginRequest;
+import dev.jeetgr.chatapp.auth.dto.LoginResponse;
 import dev.jeetgr.chatapp.auth.dto.RegisterRequest;
 import dev.jeetgr.chatapp.auth.dto.RegisterResponse;
 
@@ -25,5 +27,10 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public RegisterResponse register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+        return authService.login(request);
     }
 }

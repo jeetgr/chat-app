@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import dev.jeetgr.chatapp.auth.dto.LoginRequest;
+import dev.jeetgr.chatapp.auth.dto.LoginResponse;
 import dev.jeetgr.chatapp.auth.dto.RegisterRequest;
 import dev.jeetgr.chatapp.auth.dto.RegisterResponse;
 import dev.jeetgr.chatapp.common.exception.EmailAlreadyExistsException;
+import dev.jeetgr.chatapp.common.exception.InvalidCredentialsException;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 
@@ -35,5 +38,18 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         return new RegisterResponse(savedUser.getId(), savedUser.getEmail());
+    }
+
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.email()).orElseThrow(InvalidCredentialsException::new);
+
+        boolean passwordMatches = passwordEncoder.matches(request.password(), user.getPasswordHash());
+
+        if (!passwordMatches) {
+            throw new InvalidCredentialsException();
+        }
+
+        return new LoginResponse("Login successful");
     }
 }

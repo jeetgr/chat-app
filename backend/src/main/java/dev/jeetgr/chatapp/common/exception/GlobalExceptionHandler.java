@@ -67,6 +67,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRoomNotFound(RoomNotFoundException ex) {
+
+        log.warn("Room lookup failed: {}", ex.getMessage());
+
+        ErrorResponse response = new ErrorResponse(OffsetDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(AlreadyRoomMemberException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyRoomMember(AlreadyRoomMemberException ex) {
+
+        log.warn("Duplicate room membership: {}", ex.getMessage());
+
+        ErrorResponse response = new ErrorResponse(OffsetDateTime.now(), HttpStatus.CONFLICT.value(), ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
 

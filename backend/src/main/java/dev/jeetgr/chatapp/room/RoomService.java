@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import dev.jeetgr.chatapp.common.exception.AlreadyRoomMemberException;
 import dev.jeetgr.chatapp.common.exception.RoomAlreadyExistsException;
+import dev.jeetgr.chatapp.common.exception.RoomNotFoundException;
 import dev.jeetgr.chatapp.room.dto.CreateRoomRequest;
 import dev.jeetgr.chatapp.room.dto.RoomResponse;
 import dev.jeetgr.chatapp.user.User;
@@ -17,6 +19,7 @@ import dev.jeetgr.chatapp.user.User;
 public class RoomService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final RoomMemberRepository roomMemberRepository;
 
     public RoomResponse createRoom(CreateRoomRequest request, User currentUser) {
 
@@ -48,5 +51,24 @@ public class RoomService {
                         room.getCreatedBy().getEmail(),
                         room.getCreatedAt()))
                 .toList();
+    }
+
+    public void joinRoom(Long roomId, User currentUser) {
+
+        ChatRoom room = chatRoomRepository.findById(roomId).orElseThrow(() -> new RoomNotFoundException(roomId));
+
+        boolean alreadyMember = roomMemberRepository.existsByRoomIdAndUserId(roomId, currentUser.getId());
+
+        if (alreadyMember) {
+            throw new AlreadyRoomMemberException();
+        }
+
+        RoomMember roomMember = RoomMember.builder()
+                .room(room)
+                .user(currentUser)
+                .joinedAt(OffsetDateTime.now())
+                .build();
+
+        roomMemberRepository.save(roomMember);
     }
 }

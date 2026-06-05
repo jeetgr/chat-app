@@ -12,6 +12,10 @@ spring:
   flyway:
     enabled: true
 
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+
 logging:
   level:
     root: INFO

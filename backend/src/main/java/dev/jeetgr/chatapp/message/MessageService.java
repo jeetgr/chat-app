@@ -18,6 +18,7 @@ import dev.jeetgr.chatapp.room.ChatRoom;
 import dev.jeetgr.chatapp.room.ChatRoomRepository;
 import dev.jeetgr.chatapp.room.RoomMemberRepository;
 import dev.jeetgr.chatapp.user.User;
+import dev.jeetgr.chatapp.websocket.dto.ChatMessage;
 
 @Service
 @RequiredArgsConstructor
@@ -78,5 +79,11 @@ public class MessageService {
                         message.getContent(),
                         message.getCreatedAt()))
                 .toList();
+    }
+
+    @Transactional
+    public MessageResponse sendRealtimeMessage(ChatMessage request, User currentUser) {
+
+        return sendMessage(request.roomId(), new SendMessageRequest(request.content()), currentUser);
     }
 }

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import dev.jeetgr.chatapp.message.MessageService;
 import dev.jeetgr.chatapp.message.dto.MessageResponse;
+import dev.jeetgr.chatapp.redis.RedisChatMessage;
+import dev.jeetgr.chatapp.redis.RedisMessagePublisher;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 import dev.jeetgr.chatapp.websocket.dto.ChatMessage;
@@ -25,6 +27,7 @@ public class ChatWebSocketController {
     private final MessageService messageService;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
+    private final RedisMessagePublisher redisMessagePublisher;
 
     @MessageMapping("/chat.send")
     public void sendMessage(ChatMessage message, Principal principal) {
@@ -34,7 +37,13 @@ public class ChatWebSocketController {
 
         MessageResponse savedMessage = messageService.sendRealtimeMessage(message, currentUser);
 
-        messagingTemplate.convertAndSend("/topic/rooms/" + message.roomId(), savedMessage);
+        redisMessagePublisher.publish(RedisChatMessage.builder()
+                .id(savedMessage.id())
+                .roomId(savedMessage.roomId())
+                .sender(savedMessage.sender())
+                .content(savedMessage.content())
+                .createdAt(savedMessage.createdAt())
+                .build());
 
         log.debug("Broadcasted message to room {}", message.roomId());
     }

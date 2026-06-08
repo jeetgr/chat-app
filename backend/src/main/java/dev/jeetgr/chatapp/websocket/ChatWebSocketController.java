@@ -14,6 +14,8 @@ import dev.jeetgr.chatapp.message.dto.MessageResponse;
 import dev.jeetgr.chatapp.user.User;
 import dev.jeetgr.chatapp.user.UserRepository;
 import dev.jeetgr.chatapp.websocket.dto.ChatMessage;
+import dev.jeetgr.chatapp.websocket.dto.TypingEvent;
+import dev.jeetgr.chatapp.websocket.dto.TypingIndicator;
 
 @Slf4j
 @Controller
@@ -35,5 +37,15 @@ public class ChatWebSocketController {
         messagingTemplate.convertAndSend("/topic/rooms/" + message.roomId(), savedMessage);
 
         log.debug("Broadcasted message to room {}", message.roomId());
+    }
+
+    @MessageMapping("/chat.typing")
+    public void typing(TypingEvent event, Principal principal) {
+
+        TypingIndicator indicator = new TypingIndicator(event.roomId(), principal.getName(), event.typing());
+
+        messagingTemplate.convertAndSend("/topic/rooms/" + event.roomId() + "/typing", indicator);
+
+        log.debug("Typing event for room {} by {}", event.roomId(), principal.getName());
     }
 }

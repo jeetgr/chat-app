@@ -3,6 +3,7 @@ package dev.jeetgr.chatapp.room;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import dev.jeetgr.chatapp.common.exception.RoomNotFoundException;
 import dev.jeetgr.chatapp.room.dto.CreateRoomRequest;
 import dev.jeetgr.chatapp.room.dto.RoomResponse;
 import dev.jeetgr.chatapp.user.User;
+import dev.jeetgr.chatapp.websocket.dto.RoomPresenceEvent;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class RoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final RoomMemberRepository roomMemberRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public RoomResponse createRoom(CreateRoomRequest request, User currentUser) {
 
@@ -72,6 +75,10 @@ public class RoomService {
                 .build();
 
         roomMemberRepository.save(roomMember);
+
+        messagingTemplate.convertAndSend(
+                "/topic/rooms/" + roomId + "/presence",
+                new RoomPresenceEvent(roomId, currentUser.getEmail(), "JOINED"));
     }
 
     @Transactional
@@ -84,5 +91,9 @@ public class RoomService {
         }
 
         roomMemberRepository.deleteByRoomIdAndUserId(roomId, currentUser.getId());
+
+        messagingTemplate.convertAndSend(
+                "/topic/rooms/" + roomId + "/presence", //
+                new RoomPresenceEvent(roomId, currentUser.getEmail(), "LEFT"));
     }
 }
